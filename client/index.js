@@ -9,6 +9,8 @@ function setup() {
 }
 function draw() {
     if (mouseIsPressed) {
+        strokeWeight(2);
+        line(lastMousePos.x, lastMousePos.y, mouseX, mouseY);
         socket.emit("line", [lastMousePos.x, lastMousePos.y, mouseX, mouseY]);
     }
     for (l of linesToDraw) {

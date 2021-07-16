@@ -11,13 +11,15 @@ lines = [];
 app.use(express.static(__dirname + '/client'));
 io.on('connection', socket => {
     console.log(`ID: ${socket.id} has joined.`);
+
+    // Push all lines to new connections so lines are persistent
     for (l of lines) {
-        io.to(socket.id).emit("line", l);
+        socket.emit("line", l);
     }
 
     socket.on('disconnect', () => { /* … */ });
     socket.on('line', line => {
-        io.emit('line', line);
+        socket.broadcast.emit('line', line);
         lines.push(line);
         // console.log(line);
     })
