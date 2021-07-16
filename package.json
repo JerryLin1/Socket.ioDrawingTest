@@ -1,0 +1,20 @@
+{
+  "name": "socket-proto",
+  "version": "1.0.0",
+  "description": "Multiplayer prototype game using socket.io",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JerryLin1/SocketTest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JerryLin1/SocketTest/issues"
+  },
+  "homepage": "https://github.com/JerryLin1/SocketTest#readme"
+}
