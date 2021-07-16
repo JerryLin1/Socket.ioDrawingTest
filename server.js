@@ -25,7 +25,9 @@ io.on('connection', socket => {
     }
 
     // When client disconnects
-    socket.on('disconnect', () => { /* … */ });
+    socket.on('disconnect', () => {
+        console.log(`ID: ${socket.id} has disconnected.`);
+    });
 
     // When client draws a line
     socket.on('line', line => {
