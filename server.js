@@ -5,7 +5,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-const port = 3000;
+const port = 6567;
 server.listen(port, () => {
     console.log(`Listening on port ${port}`)
 });
@@ -18,16 +18,15 @@ app.use(express.static(__dirname + '/client'));
 // Whenever a client connects
 io.on('connection', socket => {
     console.log(`ID: ${socket.id} has joined.`);
+    // When client disconnects
+    socket.on('disconnect', () => {
+        console.log(`ID: ${socket.id} has disconnected.`);
+    });
 
     // Push all lines to new connections so lines are persistent (only on initial connection)
     for (l of lines) {
         socket.emit("line", l);
     }
-
-    // When client disconnects
-    socket.on('disconnect', () => {
-        console.log(`ID: ${socket.id} has disconnected.`);
-    });
 
     // When client draws a line
     socket.on('line', line => {

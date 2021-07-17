@@ -1,4 +1,4 @@
-socket = io();
+socket = io("192.168.0.21:6567");
 var lastMousePos;
 var linesToDraw = [];
 
