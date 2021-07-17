@@ -1,29 +1,48 @@
-socket = io("192.168.0.21:6567");
+socket = io();
 var lastMousePos;
 var linesToDraw = [];
+var thicknessSliderLabel;
+var thicknessSlider;
 
 // p5.js function that is called once at start
 function setup() {
     createCanvas(800, 500);
     background(255);
+
+    thicknessSliderLabel = createDiv("Line thickness: ")
+    thicknessSliderLabel.position(10, 10);
+    thicknessSlider = createSlider(2, 50, 2, 4);
+    thicknessSlider.parent(thicknessSliderLabel);
+
     lastMousePos = createVector(mouseX, mouseY);
 }
 
 // p5.js function that constantly updates
 function draw() {
+    let thickness = thicknessSlider.value();
+    strokeWeight(thickness);
+
     if (mouseIsPressed) {
-        strokeWeight(2);
+        let color;
+        if (mouseButton === LEFT) {
+            color = 0
+        }
+        else if (mouseButton === RIGHT) {
+            color = 255
+        }
+        stroke(color)
         // Draw line locally
         line(lastMousePos.x, lastMousePos.y, mouseX, mouseY);
 
         // Emit line to server, which will be broadcasted (emitted to all but the client that sent it)
-        socket.emit("line", [lastMousePos.x, lastMousePos.y, mouseX, mouseY]);
+        socket.emit("line", lineStruct(lastMousePos.x, lastMousePos.y, mouseX, mouseY, thickness, color));
     }
-    
+
     // Draws all lines sent by the server. Ex. other clients' lines, or lines drawn before you connected
     for (l of linesToDraw) {
-        strokeWeight(2);
-        line(l[0], l[1], l[2], l[3]);
+        stroke(l.c);
+        strokeWeight(l.t);
+        line(l.x1, l.y1, l.x2, l.y2);
     }
     linesToDraw = [];
     lastMousePos.set(mouseX, mouseY);
@@ -38,3 +57,24 @@ socket.on("line", line => {
 socket.on("disconnect", () => {
     location.reload();
 });
+
+// t = line thickness (strokeWeight)
+// c = color
+function lineStruct(x1, y1, x2, y2, t, c) {
+    return {
+        x1: x1,
+        y1: y1,
+        x2: x2,
+        y2: y2,
+        t: t,
+        c: c
+    }
+}
+
+// p5.js function that calls whenever mouse wheel is scrolled
+function mouseWheel(e) {
+    // Change thickness slider whenever mouse wheel is scrolled
+    // e.delta is the amount scrolled, which varies based on mouse settings
+    // -Math.sign(e.delta) is direction scrolled, which we multiply by 4 (one increment of slider)
+    thicknessSlider.value(thicknessSlider.value() - 4 * Math.sign(e.delta));
+}
