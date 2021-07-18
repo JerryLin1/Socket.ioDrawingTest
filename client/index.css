@@ -6,7 +6,7 @@
 body {
     background-color: tomato;
 }
-canvas {
+#defaultCanvas0 {
     border: solid 1px;
     padding-left: 0;
     padding-right: 0;

@@ -34,6 +34,8 @@ io.on('connection', socket => {
         lines.push(line);
         // console.log(line);
     })
+
+    // When client presses clear canvas button
     socket.on("message", msg => {
         if (msg === "clear") {
             lines = [];

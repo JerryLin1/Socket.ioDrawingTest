@@ -1,5 +1,6 @@
 socket = io();
 var linesToDraw = [];
+var canvas;
 var thicknessSliderLabel;
 var thicknessSlider;
 var colorPickerLabel;
@@ -10,6 +11,7 @@ var downloadButton;
 // p5.js function that is called once at start
 function setup() {
     createCanvas(800, 500);
+    canvas = document.getElementById("defaultCanvas0");
     background(255);
     for (let element of document.getElementsByClassName("p5Canvas")) {
         element.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -30,17 +32,15 @@ function setup() {
     clearButton.size(100, 30)
     clearButton.position(10, 100);
     clearButton.mousePressed(() => {
+        // Clear own canvas, then tell server to broadcast to other clients to clear canvas
         clearCanvas();
         socket.emit("message", "clear");
     });
 
-    downloadButton = createButton("Download image");
+    downloadButton = createButton("Save image");
     downloadButton.size(100, 30)
     downloadButton.position(10, 150);
-    downloadButton.mousePressed(() => {
-        let fileName = `${hour()}${minute()}${second()}`
-        saveCanvas(fileName, "png");
-    });
+    downloadButton.mousePressed(downloadImage);
 }
 
 // p5.js function that constantly updates
@@ -83,6 +83,7 @@ socket.on("disconnect", () => {
     location.reload();
 });
 
+// Clear canvas when server tells you to (which is when another client presses clear canvas button)
 socket.on("message", msg => {
     if (msg === "clear") {
         clearCanvas();
@@ -109,6 +110,14 @@ function mouseWheel(e) {
     // -Math.sign(e.delta) is direction scrolled, which we multiply by 4 (one increment of slider)
     thicknessSlider.value(thicknessSlider.value() - 4 * Math.sign(e.delta));
 }
+
+// Function called when Save Image button is pressed
+function downloadImage() {
+    let fileName = `${hour()}${minute()}${second()}`
+    saveCanvas(fileName, "png");
+}
+
+// Function called when Clear canvas button is pressed
 function clearCanvas() {
     clear();
     background(255);
