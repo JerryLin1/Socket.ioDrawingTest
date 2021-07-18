@@ -2,6 +2,8 @@ socket = io();
 var linesToDraw = [];
 var thicknessSliderLabel;
 var thicknessSlider;
+var colorPickerLabel;
+var colorPicker;
 
 // p5.js function that is called once at start
 function setup() {
@@ -15,6 +17,12 @@ function setup() {
     thicknessSliderLabel.position(10, 10);
     thicknessSlider = createSlider(2, 50, 2, 4);
     thicknessSlider.parent(thicknessSliderLabel);
+
+    colorPickerLabel = createDiv("Color: ")
+    colorPickerLabel.position(10, 40);
+    colorPicker = createColorPicker("#000000");
+    colorPicker.size(200, 10);
+    colorPicker.parent(colorPickerLabel);
 }
 
 // p5.js function that constantly updates
@@ -25,7 +33,7 @@ function draw() {
     if (mouseIsPressed) {
         let color;
         if (mouseButton === LEFT) {
-            color = 0
+            color = colorPicker.value();
         }
         else if (mouseButton === RIGHT) {
             color = 255
@@ -40,8 +48,8 @@ function draw() {
 
     // Draws all lines sent by the server. Ex. other clients' lines, or lines drawn before you connected
     for (l of linesToDraw) {
-        stroke(l.c);
-        strokeWeight(l.t);
+        stroke(l.color);
+        strokeWeight(l.thickness);
         line(l.x1, l.y1, l.x2, l.y2);
     }
     linesToDraw = [];
@@ -59,14 +67,14 @@ socket.on("disconnect", () => {
 
 // t = line thickness (strokeWeight)
 // c = color
-function lineStruct(x1, y1, x2, y2, t, c) {
+function lineStruct(x1, y1, x2, y2, thickness, color) {
     return {
         x1: x1,
         y1: y1,
         x2: x2,
         y2: y2,
-        t: t,
-        c: c
+        thickness: thickness,
+        color: color
     }
 }
 
