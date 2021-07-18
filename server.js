@@ -5,7 +5,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-const port = 6567;
+const port = 80;
 server.listen(port, () => {
     console.log(`Listening on port ${port}`)
 });
