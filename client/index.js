@@ -1,5 +1,4 @@
 socket = io();
-var lastMousePos;
 var linesToDraw = [];
 var thicknessSliderLabel;
 var thicknessSlider;
@@ -16,8 +15,6 @@ function setup() {
     thicknessSliderLabel.position(10, 10);
     thicknessSlider = createSlider(2, 50, 2, 4);
     thicknessSlider.parent(thicknessSliderLabel);
-
-    lastMousePos = createVector(mouseX, mouseY);
 }
 
 // p5.js function that constantly updates
@@ -35,10 +32,10 @@ function draw() {
         }
         stroke(color)
         // Draw line locally
-        line(lastMousePos.x, lastMousePos.y, mouseX, mouseY);
+        line(pmouseX, pmouseY, mouseX, mouseY);
 
         // Emit line to server, which will be broadcasted (emitted to all but the client that sent it)
-        socket.emit("line", lineStruct(lastMousePos.x, lastMousePos.y, mouseX, mouseY, thickness, color));
+        socket.emit("line", lineStruct(pmouseX, pmouseY, mouseX, mouseY, thickness, color));
     }
 
     // Draws all lines sent by the server. Ex. other clients' lines, or lines drawn before you connected
@@ -48,7 +45,6 @@ function draw() {
         line(l.x1, l.y1, l.x2, l.y2);
     }
     linesToDraw = [];
-    lastMousePos.set(mouseX, mouseY);
 }
 
 // When receiving lines from server, push them to linesToDraw so that they will all be drawn in draw()
