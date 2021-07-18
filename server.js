@@ -35,3 +35,10 @@ io.on('connection', socket => {
         // console.log(line);
     })
 });
+
+// Print number of lines drawn
+// setTimeout(cllines, 5000);
+// function cllines() {
+//     console.log(lines.length);
+//     setTimeout(cllines, 5000);
+// }

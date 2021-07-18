@@ -8,6 +8,9 @@ var thicknessSlider;
 function setup() {
     createCanvas(800, 500);
     background(255);
+    for (let element of document.getElementsByClassName("p5Canvas")) {
+        element.addEventListener("contextmenu", (e) => e.preventDefault());
+    }
 
     thicknessSliderLabel = createDiv("Line thickness: ")
     thicknessSliderLabel.position(10, 10);
