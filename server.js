@@ -34,6 +34,13 @@ io.on('connection', socket => {
         lines.push(line);
         // console.log(line);
     })
+    socket.on("message", msg => {
+        if (msg === "clear") {
+            lines = [];
+            socket.broadcast.emit("message", "clear");
+            console.log(`Canvas has been cleared by ${socket.id}.`);
+        }
+    })
 });
 
 // Print number of lines drawn

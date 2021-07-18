@@ -4,6 +4,7 @@ var thicknessSliderLabel;
 var thicknessSlider;
 var colorPickerLabel;
 var colorPicker;
+var clearButton;
 var downloadButton;
 
 // p5.js function that is called once at start
@@ -25,13 +26,21 @@ function setup() {
     colorPicker.size(200, 10);
     colorPicker.parent(colorPickerLabel);
 
+    clearButton = createButton("Clear canvas");
+    clearButton.size(100, 30)
+    clearButton.position(10, 100);
+    clearButton.mousePressed(() => {
+        clearCanvas();
+        socket.emit("message", "clear");
+    });
+
     downloadButton = createButton("Download image");
     downloadButton.size(100, 30)
-    downloadButton.position(10, 100);
+    downloadButton.position(10, 150);
     downloadButton.mousePressed(() => {
         let fileName = `${hour()}${minute()}${second()}`
         saveCanvas(fileName, "png");
-    })
+    });
 }
 
 // p5.js function that constantly updates
@@ -74,6 +83,12 @@ socket.on("disconnect", () => {
     location.reload();
 });
 
+socket.on("message", msg => {
+    if (msg === "clear") {
+        clearCanvas();
+    }
+})
+
 // t = line thickness (strokeWeight)
 // c = color
 function lineStruct(x1, y1, x2, y2, thickness, color) {
@@ -93,4 +108,8 @@ function mouseWheel(e) {
     // e.delta is the amount scrolled, which varies based on mouse settings
     // -Math.sign(e.delta) is direction scrolled, which we multiply by 4 (one increment of slider)
     thicknessSlider.value(thicknessSlider.value() - 4 * Math.sign(e.delta));
+}
+function clearCanvas() {
+    clear();
+    background(255);
 }
