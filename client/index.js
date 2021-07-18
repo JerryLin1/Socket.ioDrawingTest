@@ -4,6 +4,7 @@ var thicknessSliderLabel;
 var thicknessSlider;
 var colorPickerLabel;
 var colorPicker;
+var downloadButton;
 
 // p5.js function that is called once at start
 function setup() {
@@ -23,6 +24,14 @@ function setup() {
     colorPicker = createColorPicker("#000000");
     colorPicker.size(200, 10);
     colorPicker.parent(colorPickerLabel);
+
+    downloadButton = createButton("Download image");
+    downloadButton.size(100, 30)
+    downloadButton.position(10, 100);
+    downloadButton.mousePressed(() => {
+        let fileName = `${hour()}${minute()}${second()}`
+        saveCanvas(fileName, "png");
+    })
 }
 
 // p5.js function that constantly updates
